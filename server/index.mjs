@@ -2,16 +2,24 @@
 // Wallbit MCP server: zero deps, stdio JSON-RPC (newline-delimited), Node >= 18.
 import { randomUUID } from "node:crypto";
 import { createInterface } from "node:readline";
+import { readFileSync } from "node:fs";
+import { homedir } from "node:os";
+import { join } from "node:path";
 
 const BASE = process.env.WALLBIT_BASE_URL || "https://api.wallbit.io";
-const UA = "wallbit-cursor-plugin/0.1.0 (+https://github.com/rodrigouroz)";
+const UA = "wallbit-cursor-plugin/0.1.1 (+https://github.com/rodrigouroz)";
 const DRAFT_TTL_MS = 10 * 60 * 1000;
 const drafts = new Map(); // token -> { order, summary, expires }
 
 function apiKey() {
-  const k = process.env.WALLBIT_API_KEY;
-  if (!k || k.startsWith("${")) throw new UserError("WALLBIT_API_KEY no está configurada. Cargala en Plugins → Configure (permiso read; trade solo para comprar).");
-  return k;
+  const envKey = process.env.WALLBIT_API_KEY;
+  if (envKey && !envKey.startsWith("${")) return envKey;
+  const keyFile = process.env.WALLBIT_API_KEY_FILE || join(homedir(), ".config", "wallbit", "key");
+  try {
+    return readFileSync(keyFile, "utf8").trim();
+  } catch {
+    throw new UserError("Falta la key de Wallbit. Guardala en ~/.config/wallbit/key (permiso read; trade solo para comprar).");
+  }
 }
 class UserError extends Error {}
 
@@ -89,7 +97,7 @@ async function handle(msg) {
   const { id, method, params } = msg;
   if (id === undefined) return; // notification
   try {
-    if (method === "initialize") return send({ jsonrpc: "2.0", id, result: { protocolVersion: params?.protocolVersion || "2025-06-18", capabilities: { tools: {} }, serverInfo: { name: "wallbit", version: "0.1.0" } } });
+    if (method === "initialize") return send({ jsonrpc: "2.0", id, result: { protocolVersion: params?.protocolVersion || "2025-06-18", capabilities: { tools: {} }, serverInfo: { name: "wallbit", version: "0.1.1" } } });
     if (method === "ping") return send({ jsonrpc: "2.0", id, result: {} });
     if (method === "tools/list") return send({ jsonrpc: "2.0", id, result: { tools: tools.map(({ run, ...t }) => t) } });
     if (method === "tools/call") {
