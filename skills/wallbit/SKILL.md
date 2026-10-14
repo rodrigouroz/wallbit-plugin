@@ -37,4 +37,3 @@ Buy orders use a mandatory two-step flow:
 ## Data notes
 - **Checking account**: cash balances (USD, EUR, etc.).
 - **Investment account**: stock/ETF positions and available USD balance for investing (from `wallbit_get_portfolio`).
-- Buy orders deduct from the investment account's available USD, not the checking account.

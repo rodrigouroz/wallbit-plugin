@@ -40,7 +40,9 @@
 ## API Key Setup / Configuración de la API Key
 
 **English:**
-Get your API key from Wallbit (Settings → API Keys). Scopes: `read` for queries; `trade` only if you want to buy.
+Get your API key from Wallbit. The recommended way is to go to [developer.wallbit.io](https://developer.wallbit.io), open the **Agents** section, and choose **Create Agent** to create an agent with its own permissions and API key ([source](https://help.wallbit.io/en/articles/13706842-public-api-wallbit-for-agents)). Alternatively, you can use Settings → API Keys in the Wallbit app/dashboard ([docs](https://developer.wallbit.io/docs/api-reference/introduction)).
+
+Permissions: `read` for queries; `trade` only if you want to buy.
 
 ### Local development (macOS/Linux):
 Save your key to `~/.config/wallbit/key`:
@@ -61,7 +63,9 @@ Then reload Cursor (`Cmd+Shift+P` / `Ctrl+Shift+P` → "Reload Window").
 If your Cursor shows a `WALLBIT_API_KEY` plugin variable, you can set it there instead. Otherwise use the file method above.
 
 **Español:**
-Obtener la API key desde Wallbit (Settings → API Keys). Permisos: `read` para consultas; `trade` solo si querés comprar.
+Obtener la API key desde Wallbit. La forma recomendada es ir a [developer.wallbit.io](https://developer.wallbit.io), abrir la sección **Agents** y elegir **Create Agent** para crear un agente con sus propios permisos y API key ([fuente](https://help.wallbit.io/en/articles/13706842-public-api-wallbit-for-agents)). Alternativamente, se puede usar Settings → API Keys en la app/dashboard de Wallbit ([docs](https://developer.wallbit.io/docs/api-reference/introduction)).
+
+Permisos: `read` para consultas; `trade` solo si querés comprar.
 
 ### Desarrollo local (macOS/Linux):
 Guardar la key en `~/.config/wallbit/key`:
