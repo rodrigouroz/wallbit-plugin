@@ -1,25 +1,39 @@
 ---
 name: wallbit
-description: Consultar y operar la cuenta de Wallbit (wallbit.io) del usuario. Usar para saldos, portfolio, transacciones, precios de activos y para preparar compras (DCA) que el usuario confirma a mano.
+description: Operate the user's Wallbit (wallbit.io) account. Query balances, portfolio, transactions, asset prices, and execute two-step buy orders.
 ---
 
 # Wallbit
 
-## Qué tool usar
-- Saldo en la cuenta checking (USD/EUR): `wallbit_get_checking_balance`.
-- Posiciones y USD disponible para invertir: `wallbit_get_portfolio`.
-- Historial / estado de órdenes: `wallbit_list_transactions` (filtros status, type, fechas).
-- Precio o info de un ticker: `wallbit_get_asset`; buscar tickers: `wallbit_search_assets`.
-- Comprar: `wallbit_draft_buy_order` y, solo tras confirmación, `wallbit_execute_buy_order`.
+## Tools
 
-## Regla de confirmación (obligatoria)
-1. Toda compra empieza con `wallbit_draft_buy_order`; no ejecuta nada.
-2. Mostrá el resumen tal cual y pedí un "sí" explícito por esa orden puntual. Silencio, "ok en general" o una instrucción vieja no cuentan.
-3. Recién ahí `wallbit_execute_buy_order` con el token y `confirm=true`. Un token por orden; nunca reintentes solo. Si falla, revisá transacciones y preguntá.
-4. REQUESTED/PENDING significa enviada, no ejecutada. No digas "comprado" hasta verlo COMPLETED en transacciones.
-5. Nunca vendas ni muevas fondos: este plugin no lo hace.
+### Account balances
+- **`wallbit_get_checking_balance`** – Checking account balances (GET /api/public/v1/balance/checking). Returns only currencies with positive balance.
+- **`wallbit_get_portfolio`** – Investment account positions and available USD to invest (GET /api/public/v1/balance/stocks).
 
-## Contexto DCA del usuario (semanal)
-- USD 100 al fondo de emergencia: queda en cash, no se compra nada.
-- USD 100 a invertir: 80% VT (USD 80) y 20% BND (USD 20), dos borradores separados, cada uno confirmado a mano.
-- Antes de proponer, verificá con `wallbit_get_portfolio` que haya USD disponible en inversión. Si no alcanza, avisá; no inventes saldos, precios ni estados: siempre salen de las tools.
+### Transactions
+- **`wallbit_list_transactions`** – Transaction history with filters (GET /api/public/v1/transactions). Includes trades and their status.
+  - Filters: `page`, `limit`, `status` (e.g. COMPLETED, PENDING, FAILED), `type`, `currency`, `from_date`, `to_date` (YYYY-MM-DD).
+  - Transaction statuses: REQUESTED/PENDING mean submitted but not executed; only COMPLETED is executed.
+
+### Assets
+- **`wallbit_get_asset`** – Current price and info for one asset by symbol (GET /api/public/v1/assets/{symbol}). Use for quotes.
+- **`wallbit_search_assets`** – List/search tradable assets (GET /api/public/v1/assets). Filters: `search`, `category`, `page`, `limit`.
+
+## Two-step buy orders
+
+Buy orders use a mandatory two-step flow:
+
+1. **`wallbit_draft_buy_order`** – Draft a buy order. Does NOT execute anything. Validates parameters, fetches the current price, and returns a summary plus a `confirmation_token` (expires in 10 minutes).
+   - Parameters: `symbol` (string), `amount_usd` (number > 0), `order_type` (default "MARKET").
+   - Returns: summary, order details, `confirmation_token`, expiration.
+   - Note: `amount_usd` is the USD amount to spend, not the number of shares/units.
+
+2. **`wallbit_execute_buy_order`** – Execute a previously drafted order (POST /api/public/v1/trades). Requires the `confirmation_token` from step 1 and `confirm=true`. Execution requires an explicit user confirmation obtained by the host agent.
+   - Parameters: `confirmation_token` (string), `confirm` (boolean, must be true).
+   - Single-use token: one attempt per draft. Never auto-retry. If it fails, check `wallbit_list_transactions` before drafting again to avoid duplicates.
+   - Submitted orders may return status REQUESTED or PENDING; verify execution later with `wallbit_list_transactions` (COMPLETED = executed).
+
+## Data notes
+- **Checking account**: cash balances (USD, EUR, etc.).
+- **Investment account**: stock/ETF positions and available USD balance for investing (from `wallbit_get_portfolio`).

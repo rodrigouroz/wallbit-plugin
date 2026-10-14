@@ -10,7 +10,7 @@
     {
       "name": "wallbit",
       "source": ".",
-      "description": "Wallbit (wallbit.io) API: saldos, portfolio, transacciones, activos y compras con confirmación manual en dos pasos."
+      "description": "Unofficial Wallbit plugin by Rodrigo Uroz, not affiliated with or endorsed by Wallbit. Check balances, portfolio, transactions and asset prices, and draft buy orders you always confirm before they run."
     }
   ]
 }

@@ -1,10 +1,12 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "wallbit",
-  "description": "Wallbit (wallbit.io) API: saldos, portfolio, transacciones, activos y compras con confirmación manual en dos pasos.",
-  "version": "0.1.1",
+  "description": "Unofficial Wallbit plugin by Rodrigo Uroz, not affiliated with or endorsed by Wallbit. Check balances, portfolio, transactions and asset prices, and draft buy orders you always confirm before they run.",
+  "version": "0.2.0",
   "author": { "name": "Rodrigo Uroz" },
+  "homepage": "https://github.com/rodrigouroz/wallbit-plugin",
+  "repository": "https://github.com/rodrigouroz/wallbit-plugin",
   "license": "MIT",
   "keywords": ["wallbit","broker","finance","dca"],
-  "variables": {"type":"object","properties":{"WALLBIT_API_KEY":{"type":"string","title":"Wallbit API key","description":"API key de Wallbit (Settings → API Keys). Permiso read para consultas; trade solo si querés comprar."}},"required":["WALLBIT_API_KEY"]}
+  "variables": {"type":"object","properties":{"WALLBIT_API_KEY":{"type":"string","title":"Wallbit API key","description":"Wallbit API key (developer.wallbit.io → Agents → Create Agent). Read permission for queries; trade only to buy."}},"required":["WALLBIT_API_KEY"]}
 }
