@@ -1,0 +1,16 @@
+{
+  "name": "rodrigouroz-plugins",
+  "owner": {
+    "name": "Rodrigo Uroz"
+  },
+  "metadata": {
+    "description": "Rodrigo Uroz's Cursor plugins"
+  },
+  "plugins": [
+    {
+      "name": "wallbit",
+      "source": ".",
+      "description": "Wallbit (wallbit.io) API: saldos, portfolio, transacciones, activos y compras con confirmación manual en dos pasos."
+    }
+  ]
+}
