@@ -87,6 +87,22 @@ Si Cursor muestra una variable de plugin `WALLBIT_API_KEY`, se puede configurar 
 
 ---
 
+## Usar en Grok Bot / Use in Grok Bot
+
+**Español:** En Grok Bot el plugin pide `WALLBIT_API_KEY` durante el onboarding. El usuario no hace nada manual.
+
+Las compras requieren dos pasos:
+1. `wallbit_draft_buy_order` — prepara la orden y devuelve un token.
+2. `wallbit_execute_buy_order` — se ejecuta solo con `confirm=true` y el token del draft.
+
+**English:** In Grok Bot the plugin asks for `WALLBIT_API_KEY` during onboarding. There is nothing to configure by hand.
+
+Buys require two steps:
+1. `wallbit_draft_buy_order` — drafts the order and returns a token.
+2. `wallbit_execute_buy_order` — runs only with `confirm=true` and the draft token.
+
+---
+
 ## Two-step buy safety / Seguridad de compra en dos pasos
 
 **English:** All buy orders require two steps:
